@@ -2,9 +2,10 @@ version: "3"
 services:
   pantip-scraper:
     build: .
+    image: lanna-oss/pantip-scraper
     volumes:
-      - "./:/home/yuck/pantip-scraper:rw"
-      - "/home/yuck/pantip-scraper/node_modules"
+      - "./:/home/lanna-oss/pantip-scraper:rw"
+      - "/home/lanna-oss/pantip-scraper/node_modules"
     environment:
       - NODE_ENV=development
     ports:
@@ -15,11 +16,11 @@ services:
     restart: always
   mongodb:
     build: ./mongodb
-    image: yuck/pantip-scrape-db
+    image: lanna-oss/pantip-scrape-db
     ports:
       - "27017:27017"
   mongo-unit-test:
     build: ./mongodb
-    image: yuck/pantip-scarpe-unittest
+    image: lanna-oss/pantip-scarpe-unittest
     ports:
       - "27019:27017"
