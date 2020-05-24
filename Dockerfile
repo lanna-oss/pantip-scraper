@@ -1,5 +1,5 @@
 FROM node:12.13-alpine
-WORKDIR /home/yuck/pantip-scraper
+WORKDIR /home/lanna-oss/pantip-scraper
 ADD package*.json ./
 RUN apk add --no-cache --virtual .gyp python make g++ \
     && yarn install \

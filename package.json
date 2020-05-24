@@ -2,7 +2,7 @@
   "name": "pantip-scraper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "test": "jest --watchAll --coverage",
     "start:dev": "concurrently --kill-others \"tsc -w\" \"nodemon build/index.js\"",

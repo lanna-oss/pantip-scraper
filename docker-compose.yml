@@ -16,11 +16,11 @@ services:
     restart: always
   mongodb:
     build: ./mongodb
-    image: lanna-oss/pantip-scrape-db
+    image: lanna-oss/pantip-scraper-db
     ports:
       - "27017:27017"
-  mongo-unit-test:
-    build: ./mongodb
-    image: lanna-oss/pantip-scarpe-unittest
-    ports:
-      - "27019:27017"
+  # mongo-unit-test:
+  #   build: ./mongodb
+  #   image: lanna-oss/pantip-scraper-unittest
+  #   ports:
+  #     - "27019:27017"
