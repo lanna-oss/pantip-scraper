@@ -3,6 +3,7 @@ var express = require("express");
 
 import request from "request-promise";
 import { saveSearchResult } from "./repository/result";
+import { connectToDataSource } from "./repository";
 
 async function getSearchfromTopic(topic: string) {
   let numPage: number = 1;
@@ -13,7 +14,6 @@ async function getSearchfromTopic(topic: string) {
     "https://pantip.com/forum/topic/render_comments?tid=[topicId]";
 
   var ic = new iconv.Iconv("utf-8", "tis-620");
-
   var nextPage = true;
 
   while (nextPage) {
@@ -43,9 +43,9 @@ async function getSearchfromTopic(topic: string) {
     // console.log(response);
     nextPage = response.next_page;
     if (response.data) {
-      response.data.map(async (topic: any) => {
+      response.data.map(async (item: any) => {
         var commentOptions = {
-          url: commentEndPoint.replace("[topicId]", topic.topic_id),
+          url: commentEndPoint.replace("[topicId]", item.topic_id),
           encoding: "utf8",
           headers: {
             "User-Agent":
@@ -54,7 +54,6 @@ async function getSearchfromTopic(topic: string) {
             "X-Requested-With": "XMLHttpRequest"
           }
         };
-
         // console.log(commentOptions);
         let comment = await request(commentOptions);
         let body = ic.convert(comment).toString("utf-8");
@@ -66,9 +65,10 @@ async function getSearchfromTopic(topic: string) {
               comment.message.replace(/<[^>]*>?/gm, "")
             );
           }
-          console.log(`number of comments : ${result.comments.length}`);
+        //  console.log(`number of comments : ${result.comments.length}`);
           console.log(`message of comment: ${result.comments}`);
-          results.push(result);
+          console.log(`topic is ${topic}`)
+          saveSearchResult( topic, item.topic_id, result.comments);
         }
       });
     }
@@ -86,9 +86,11 @@ server.get("/search", async (req: any, res: any) => {
   if (keyword && keyword !== "") {
     let searchKeyword = keyword.toLowerCase();
     console.log(`search query for keyword ${searchKeyword}`);
+
+    await connectToDataSource();
     const results = await getSearchfromTopic(searchKeyword);
-    // await saveSearchResult( keyword, results))
     // res.send(results);
+    res.send(`Success for scrape post and comment with keyword ${searchKeyword}`)
   } else {
     res.send("Your topic for query is empty");
   }
